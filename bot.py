@@ -50,9 +50,6 @@ async def possibilities(ctx: Context, *, text: str = ""):
 
     if (len(results) <= 0): return await ctx.reply("No results found.")
 
-    receiver = ctx
-    if float(values["results"]) > 10 and len(results) > 10: receiver = ctx.author
-
     resultMessage = "```\n"
 
     for index, result in enumerate(results):
@@ -66,7 +63,7 @@ async def possibilities(ctx: Context, *, text: str = ""):
             break
         else: resultMessage += newLine
 
-    await receiver.send(resultMessage + "\n```")
+    await ctx.send(resultMessage + "\n```")
 
 @bot.command(aliases = ["h"])
 async def help(ctx: Context):
@@ -81,7 +78,7 @@ async def help(ctx: Context):
     embed.add_field(name="mindistance (0.01)", value="The amount a jump should be possible by to be included in results.", inline=True)
     embed.add_field(name="prevslip (0.6)", value="Slip of the previous tick.", inline=True)
     embed.add_field(name="currentslip (0.6)", value="Slip of the sprintjump tick.", inline=True)
-    embed.add_field(name="results (5)", value="The amount of results to display, if greater than 10, results will be sent in DMs.", inline=True)
+    embed.add_field(name="results (5)", value="The amount of results to display.", inline=True)
     embed.add_field(name="inertia (0.005)", value="Determines when speed is considered negligible", inline=True)
 
     embed.add_field(name="Example use", value="`-pos speed=0 results=15 strafe45=true`")
