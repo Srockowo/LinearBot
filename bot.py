@@ -57,7 +57,7 @@ async def possibilities(ctx: Context, *, text: str = ""):
         newLine = f"[Poss by: {result['possBy']} {result['closestPixels']}px ({result['closestDistance']} blocks) "
         newLine += f"Tier {12 - result['airtime']} (Airtime {result['airtime']}) Distance made: {result['distance']}]\n"
 
-        if (len(resultMessage + newLine + lengthErrorMsg) >= 1990):
+        if (len(resultMessage + newLine) >= 2000 - len(lengthErrorMsg)):
             resultMessage += lengthErrorMsg
             break
         else: resultMessage += newLine
