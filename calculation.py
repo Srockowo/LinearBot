@@ -15,7 +15,7 @@ def closestDistance(z):
 def possibilities(vz, strafe45, minDistance , prevSlip, currSlip, startAirtime):
     results = []
 
-    for airtime in range(startAirtime,255):
+    for airtime in range(startAirtime,256):
         functions = []
         speed = vz
         zPos = vz
