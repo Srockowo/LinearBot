@@ -12,7 +12,7 @@ def closestDistance(z):
         "distance": px(pixels)
     }
 
-def possibilities(vz, strafe45 = False, minDistance = 0.01, prevSlip = 0.6, currSlip = 0.6, inertia=0.005):
+def possibilities(vz, strafe45, minDistance , prevSlip, currSlip, inertia):
     results = []
 
     for airtime in range(2,255):

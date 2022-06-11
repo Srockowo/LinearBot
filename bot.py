@@ -23,7 +23,7 @@ async def possibilities(ctx: Context, *, text: str = ""):
     if text == "": return await ctx.reply("At least 1 argument is required.")
     acceptedKeys = ["speed", "strafe45", "mindistance", "prevslip", "currentslip", "results"]
     values = {
-        "results": 5,
+        "results": 25,
         "speed": 0,
         "strafe45": "false",
         "mindistance": 0.01,
@@ -72,15 +72,15 @@ async def help(ctx: Context):
     embed.description += " and gives results of jumps that are possible with the given arguments."
     embed.description += "\nThe command can also be used with the following aliases, [`pos`, `p`]"
     embed.description += "\nArguments are as follow (values in parenthesis are the default values):"
-    embed.add_field(name="speed (0)", value="The initial speed.", inline=True)
     embed.add_field(name="strafe45 (False)", value="Whether the bot will be doing a sprintjump45 or just a sprintjump.", inline=True)
     embed.add_field(name="mindistance (0.01)", value="The amount a jump should be possible by to be included in results.", inline=True)
-    embed.add_field(name="prevslip (0.6)", value="Slip of the previous tick.", inline=True)
-    embed.add_field(name="currentslip (0.6)", value="Slip of the sprintjump tick.", inline=True)
-    embed.add_field(name="results (5)", value="The amount of results to display.", inline=True)
     embed.add_field(name="inertia (0.005)", value="Determines when speed is considered negligible.", inline=True)
+    embed.add_field(name="speed (0)", value="The initial speed.", inline=True)  
+    embed.add_field(name="currentslip (0.6)", value="Slip of the sprintjump tick.", inline=True)
+    embed.add_field(name="prevslip (0.6)", value="Slip of the previous tick.", inline=True)
+    embed.add_field(name="results (25)", value="The amount of results to display. By default, this exceeds message character limit.", inline=True)
 
-    embed.add_field(name="Example use", value="`-pos speed=0 results=15 strafe45=true`", inline=False)
+    embed.add_field(name="Example use", value="`-pos speed=0 results=8 strafe45=true`", inline=False)
 
     await ctx.reply(embed=embed)
 
