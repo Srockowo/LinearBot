@@ -1,4 +1,3 @@
-from cmath import log
 import discord
 from discord.ext import commands
 from discord.ext.commands.context import Context
@@ -58,7 +57,7 @@ async def possibilities(ctx: Context, *, text: str = ""):
         newLine = f"[Poss by: {result['possBy']} {result['closestPixels']}px ({result['closestDistance']} blocks) "
         newLine += f"Tier {12 - result['airtime']} (Airtime {result['airtime']}) Distance made: {result['distance']}]\n"
 
-        if (len(resultMessage + newLine) + len(lengthErrorMsg) >= 1980):
+        if (len(resultMessage + newLine) + len(lengthErrorMsg) >= 2000):
             resultMessage += lengthErrorMsg
             break
         else: resultMessage += newLine
@@ -79,7 +78,7 @@ async def help(ctx: Context):
     embed.add_field(name="prevslip (0.6)", value="Slip of the previous tick.", inline=True)
     embed.add_field(name="currentslip (0.6)", value="Slip of the sprintjump tick.", inline=True)
     embed.add_field(name="results (5)", value="The amount of results to display.", inline=True)
-    embed.add_field(name="inertia (0.005)", value="Determines when speed is considered negligible", inline=True)
+    embed.add_field(name="inertia (0.005)", value="Determines when speed is considered negligible.", inline=True)
 
     embed.add_field(name="Example use", value="`-pos speed=0 results=15 strafe45=true`")
 
