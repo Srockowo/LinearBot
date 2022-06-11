@@ -80,7 +80,7 @@ async def help(ctx: Context):
     embed.add_field(name="results (5)", value="The amount of results to display.", inline=True)
     embed.add_field(name="inertia (0.005)", value="Determines when speed is considered negligible.", inline=True)
 
-    embed.add_field(name="Example use", value="`-pos speed=0 results=15 strafe45=true`")
+    embed.add_field(name="Example use", value="`-pos speed=0 results=15 strafe45=true`", inline=False)
 
     await ctx.reply(embed=embed)
 
