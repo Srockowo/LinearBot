@@ -12,10 +12,10 @@ def closestDistance(z):
         "distance": px(pixels)
     }
 
-def possibilities(vz, strafe45, minDistance , prevSlip, currSlip, inertia):
+def possibilities(vz, strafe45, minDistance , prevSlip, currSlip, startAirtime):
     results = []
 
-    for airtime in range(2,255):
+    for airtime in range(startAirtime,255):
         functions = []
         speed = vz
         zPos = vz
@@ -26,13 +26,11 @@ def possibilities(vz, strafe45, minDistance , prevSlip, currSlip, inertia):
             else: functions.append(movement.sprintAir)
 
         speed = movement.sprintjump(speed, slip, currSlip)
-        if speed < inertia: speed = 0
         slip = currSlip
 
         for func in functions:
             zPos += speed
             speed = func(speed, slip)
-            if speed < inertia: speed = 0
             slip = 1
 
         results.append({

@@ -1,3 +1,4 @@
+import math
 import discord
 from discord.ext import commands
 from discord.ext.commands.context import Context
@@ -21,7 +22,7 @@ lengthErrorMsg = "\nMessage exceeded 2000 characters."
 @bot.command(aliases = ["pos", "p"])
 async def possibilities(ctx: Context, *, text: str = ""):
     if text == "": return await ctx.reply("At least 1 argument is required.")
-    acceptedKeys = ["speed", "strafe45", "mindistance", "prevslip", "currentslip", "results"]
+    acceptedKeys = ["speed", "strafe45", "mindistance", "prevslip", "currentslip", "results", "airtime"]
     values = {
         "results": 25,
         "speed": 0,
@@ -29,7 +30,7 @@ async def possibilities(ctx: Context, *, text: str = ""):
         "mindistance": 0.01,
         "prevslip": 0.6,
         "currentslip": 0.6,
-        "inertia": 0.005
+        "airtime": 2
     }
 
     for arg in text.split(' '):
@@ -38,13 +39,16 @@ async def possibilities(ctx: Context, *, text: str = ""):
         if keyValue[0].lower() in acceptedKeys:
             values[keyValue[0]] = keyValue[1]
 
+    airtime = math.floor(float(values["airtime"]))
+    if airtime < 0 or airtime > 255: return await ctx.reply("`airtime` has to be a value between `0` and `255`.")
+
     results = calculation.possibilities(
         vz=float(values["speed"]),
         strafe45=values["strafe45"].lower() == "true",
         minDistance=float(values["mindistance"]),
         prevSlip=float(values["prevslip"]),
         currSlip=float(values["currentslip"]),
-        inertia=float(values["inertia"])
+        startAirtime=airtime
     )
 
     if (len(results) <= 0): return await ctx.reply("No results found.")
@@ -74,7 +78,7 @@ async def help(ctx: Context):
     embed.description += "\nArguments are as follow (values in parenthesis are the default values):"
     embed.add_field(name="strafe45 (False)", value="Whether the bot will be doing a sprintjump45 or just a sprintjump.", inline=True)
     embed.add_field(name="mindistance (0.01)", value="The amount a jump should be possible by to be included in results.", inline=True)
-    embed.add_field(name="inertia (0.005)", value="Determines when speed is considered negligible.", inline=True)
+    embed.add_field(name="airtime (2)", value="Starting airtime for the simulation. Accepts values between 0 and 255.", inline=True)
     embed.add_field(name="speed (0)", value="The initial speed.", inline=True)  
     embed.add_field(name="currentslip (0.6)", value="Slip of the sprintjump tick.", inline=True)
     embed.add_field(name="prevslip (0.6)", value="Slip of the previous tick.", inline=True)
