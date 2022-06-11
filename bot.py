@@ -22,7 +22,7 @@ lengthErrorMsg = "\nMessage exceeded 2000 characters."
 @bot.command(aliases = ["pos", "p"])
 async def possibilities(ctx: Context, *, text: str = ""):
     if text == "": return await ctx.reply("At least 1 argument is required.")
-    acceptedKeys = ["speed", "strafe45", "mindistace", "prevslip", "currentslip", "results"]
+    acceptedKeys = ["speed", "strafe45", "mindistance", "prevslip", "currentslip", "results"]
     values = {
         "results": 5,
         "speed": 0,
