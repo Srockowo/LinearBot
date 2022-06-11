@@ -29,7 +29,8 @@ async def possibilities(ctx: Context, *, text: str = ""):
         "strafe45": "false",
         "mindistance": 0.01,
         "prevslip": 0.6,
-        "currentslip": 0.6
+        "currentslip": 0.6,
+        "inertia": 0.005
     }
 
     for arg in text.split(' '):
@@ -43,7 +44,8 @@ async def possibilities(ctx: Context, *, text: str = ""):
         strafe45=values["strafe45"].lower() == "true",
         minDistance=float(values["mindistance"]),
         prevSlip=float(values["prevslip"]),
-        currSlip=float(values["currentslip"])
+        currSlip=float(values["currentslip"]),
+        inertia=float(values["inertia"])
     )
 
     if (len(results) <= 0): return await ctx.reply("No results found.")
@@ -80,6 +82,7 @@ async def help(ctx: Context):
     embed.add_field(name="prevslip (0.6)", value="Slip of the previous tick.", inline=True)
     embed.add_field(name="currentslip (0.6)", value="Slip of the sprintjump tick.", inline=True)
     embed.add_field(name="results (5)", value="The amount of results to display, if greater than 10, results will be sent in DMs.", inline=True)
+    embed.add_field(name="inertia (0.005)", value="Determines when speed is considered negligible", inline=True)
 
     embed.add_field(name="Example use", value="`-pos speed=0 results=15 strafe45=true`")
 
