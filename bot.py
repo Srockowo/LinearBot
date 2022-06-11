@@ -58,10 +58,10 @@ async def possibilities(ctx: Context, *, text: str = ""):
     for index, result in enumerate(results):
         if index >= float(values["results"]): break
 
-        newLine = f"[Poss by: {result['possBy']} {result['closestPixels']}px ({result['closestDistance']} blocks) "
-        newLine += f"Tier {12 - result['airtime']} (Airtime {result['airtime']}) Distance made: {result['distance']}]\n"
+        newLine = f"[Poss by: {result['possBy']} {result['closestPixels']}px ({result['closestDistance']} b) "
+        newLine += f"Tier {12 - result['airtime']} (Airtime {result['airtime']}) Distance: {result['distance']}]\n"
 
-        if (len(resultMessage + newLine) >= 2000 - len(lengthErrorMsg)):
+        if (len(resultMessage + newLine) >= 1999 - len(lengthErrorMsg)):
             resultMessage += lengthErrorMsg
             break
         else: resultMessage += newLine
