@@ -1,10 +1,10 @@
-import math
 import discord
 from discord.ext import commands
 from discord.ext.commands.context import Context
 import json
 import calculation
 import parser
+import args
 
 with open("config.json", "r") as config:
     config = json.load(config)
@@ -22,17 +22,17 @@ async def on_ready():
 async def possibilities(ctx: Context, *, text: str = ""):
     if text == "": return await ctx.reply("At least 1 argument is required.")
     
-    try: args = parser.parseInput(text)
+    try: inputArgs = parser.parseInput(text)
     except: return await ctx.reply(f"Invalid arguments. Use `{prefix}help` for more information")
 
-    airtime = args["airtime"]
+    airtime = inputArgs["airtime"]
     if airtime < 0 or airtime > 255: return await ctx.reply("`airtime` has to be a value between `0` and `255`.")
 
-    results = calculation.possibilities(args)
+    results = calculation.possibilities(inputArgs)
 
     if (len(results) < 1): return await ctx.reply("No results found.")
 
-    await ctx.send(calculation.toString(results, args))
+    await ctx.send(calculation.toString(results, inputArgs))
 
 @bot.command(aliases = ["h"])
 async def help(ctx: Context):
@@ -42,13 +42,11 @@ async def help(ctx: Context):
     embed.description += " and gives results of jumps that are possible with the given arguments."
     embed.description += "\nThe command can also be used with the following aliases, [`pos`, `p`]"
     embed.description += "\nArguments are as follow (values in parenthesis are the default values):"
-    embed.add_field(name="strafe45 (False)", value="Whether the bot will be doing a sprintjump45 or just a sprintjump.", inline=True)
-    embed.add_field(name="mindistance (0.01)", value="The amount a jump should be possible by to be included in results.", inline=True)
-    embed.add_field(name="airtime (2)", value="Starting airtime for the simulation. Accepts values between 0 and 255.", inline=True)
-    embed.add_field(name="speed (0)", value="The initial speed.", inline=True)  
-    embed.add_field(name="currentslip (0.6)", value="Slip of the sprintjump tick.", inline=True)
-    embed.add_field(name="prevslip (0.6)", value="Slip of the previous tick.", inline=True)
-    embed.add_field(name="results (25)", value="The amount of results to display. By default, this exceeds message character limit.", inline=True)
+    
+    defaultArgs = args.default()
+
+    for key, value in defaultArgs.items():
+        embed.add_field(name=f"{key} ({value['value']})", value=value["description"], inline=True)
 
     embed.add_field(name="Example use", value="`-pos speed=0 results=8 strafe45=true`", inline=False)
 
