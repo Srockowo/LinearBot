@@ -61,10 +61,6 @@ async def help(ctx: Context):
     await ctx.reply(embed=embed)
 
 async def handleInput(replyTo: Context | discord.Message, input: str):
-    if input == "":
-        await errorMsg(replyTo, "At least 1 argument is required.")
-        return
-    
     try: inputArgs = parser.parseInput(input)
     except:
         await errorMsg(replyTo, f"Invalid arguments. Use `{prefix}help` for more information")
