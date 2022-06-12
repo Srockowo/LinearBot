@@ -2,7 +2,7 @@ import math as Math
 import movement
 
 def px(x):
-    return x * (1/16)
+    return x / 16
 
 def closestDistance(z):
     pixels = Math.floor(z / px(1))
@@ -12,30 +12,29 @@ def closestDistance(z):
         "distance": px(pixels)
     }
 
-def possibilities(vz, strafe45, minDistance , prevSlip, currSlip, startAirtime):
+def possibilities(args: dict):
     results = []
 
-    for airtime in range(startAirtime,256):
+    for airtime in range(args["airtime"],256):
         functions = []
-        speed = vz
-        zPos = vz
-        slip = prevSlip
+        simArgs = args.copy()
+        simArgs["z"] = simArgs["speed"]
 
         for _ in range(airtime):
-            if strafe45: functions.append(movement.sprintAir45)
+            if simArgs["strafe45"]: functions.append(movement.sprintAir45)
             else: functions.append(movement.sprintAir)
 
-        speed = movement.sprintjump(speed, slip, currSlip)
-        slip = currSlip
+        simArgs["speed"] = movement.sprintjump(simArgs["speed"], simArgs["prevslip"], args["currentslip"])
+        simArgs["prevslip"] = args["currentslip"]
 
         for func in functions:
-            zPos += speed
-            speed = func(speed, slip)
-            slip = 1
+            simArgs["z"] += simArgs["speed"]
+            simArgs["speed"] = func(simArgs["speed"], simArgs["prevslip"])
+            simArgs["prevslip"] = 1
 
         results.append({
             "airtime": airtime + 1,
-            "distance": zPos + 0.6
+            "distance": simArgs["z"] + 0.6
         })
 
     newResults = []
@@ -44,7 +43,7 @@ def possibilities(vz, strafe45, minDistance , prevSlip, currSlip, startAirtime):
         closest = closestDistance(result["distance"])
         possBy = result["distance"] - closest["distance"]
 
-        if possBy < minDistance:
+        if possBy < args["mindistance"]:
             newResults.append({
                 "possBy": possBy,
                 "closestPixels": closest["pixels"],
@@ -54,3 +53,20 @@ def possibilities(vz, strafe45, minDistance , prevSlip, currSlip, startAirtime):
             })
     
     return newResults
+
+def toString(results: list[dict], args: dict):
+    lengthErrorMsg = "\nMessage exceeded 2000 characters."
+    resultMessage = "```\n"
+
+    for index, result in enumerate(results):
+        if index >= float(args["results"]): break
+
+        newLine = f"[Poss by: {result['possBy']} {result['closestPixels']}px ({result['closestDistance']} b) "
+        newLine += f"Tier {12 - result['airtime']} (Airtime {result['airtime']}) Distance: {result['distance']}]\n"
+
+        if (len(resultMessage + newLine) >= 1999 - len(lengthErrorMsg)):
+            resultMessage += lengthErrorMsg
+            break
+        else: resultMessage += newLine
+
+    return resultMessage + "\n```"

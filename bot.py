@@ -4,6 +4,7 @@ from discord.ext import commands
 from discord.ext.commands.context import Context
 import json
 import calculation
+import parser
 
 with open("config.json", "r") as config:
     config = json.load(config)
@@ -17,56 +18,21 @@ bot = commands.Bot(command_prefix=prefix, intents=intents, help_command=None)
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name=f"{prefix}help"))
 
-lengthErrorMsg = "\nMessage exceeded 2000 characters."
-
 @bot.command(aliases = ["pos", "p"])
 async def possibilities(ctx: Context, *, text: str = ""):
     if text == "": return await ctx.reply("At least 1 argument is required.")
-    acceptedKeys = ["speed", "strafe45", "mindistance", "prevslip", "currentslip", "results", "airtime"]
-    values = {
-        "results": 25,
-        "speed": 0,
-        "strafe45": "false",
-        "mindistance": 0.01,
-        "prevslip": 0.6,
-        "currentslip": 0.6,
-        "airtime": 2
-    }
+    
+    try: args = parser.parseInput(text)
+    except: return await ctx.reply(f"Invalid arguments. Use `{prefix}help` for more information")
 
-    for arg in text.split(' '):
-        keyValue: list = arg.split("=")
-
-        if keyValue[0].lower() in acceptedKeys:
-            values[keyValue[0]] = keyValue[1]
-
-    airtime = math.floor(float(values["airtime"]))
+    airtime = args["airtime"]
     if airtime < 0 or airtime > 255: return await ctx.reply("`airtime` has to be a value between `0` and `255`.")
 
-    results = calculation.possibilities(
-        vz=float(values["speed"]),
-        strafe45=values["strafe45"].lower() == "true",
-        minDistance=float(values["mindistance"]),
-        prevSlip=float(values["prevslip"]),
-        currSlip=float(values["currentslip"]),
-        startAirtime=airtime
-    )
+    results = calculation.possibilities(args)
 
-    if (len(results) <= 0): return await ctx.reply("No results found.")
+    if (len(results) < 1): return await ctx.reply("No results found.")
 
-    resultMessage = "```\n"
-
-    for index, result in enumerate(results):
-        if index >= float(values["results"]): break
-
-        newLine = f"[Poss by: {result['possBy']} {result['closestPixels']}px ({result['closestDistance']} b) "
-        newLine += f"Tier {12 - result['airtime']} (Airtime {result['airtime']}) Distance: {result['distance']}]\n"
-
-        if (len(resultMessage + newLine) >= 1999 - len(lengthErrorMsg)):
-            resultMessage += lengthErrorMsg
-            break
-        else: resultMessage += newLine
-
-    await ctx.send(resultMessage + "\n```")
+    await ctx.send(calculation.toString(results, args))
 
 @bot.command(aliases = ["h"])
 async def help(ctx: Context):
