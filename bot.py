@@ -56,7 +56,7 @@ async def help(ctx: Context):
     for key, value in defaultArgs.items():
         embed.add_field(name=f"{key} ({value['value']})", value=value["description"], inline=True)
 
-    embed.add_field(name="Example use", value="`-pos speed=0 results=8 strafe45=true`", inline=False)
+    embed.add_field(name="Example use (rex bwmm results)", value=f"`{prefix}pos speed=0.216423 strafe45=true prevslip=1 mindistance=0.02`", inline=False)
 
     await ctx.reply(embed=embed)
 
