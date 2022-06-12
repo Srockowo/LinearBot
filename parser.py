@@ -1,9 +1,17 @@
 import args 
+import json
+
+with open('config.json', 'r') as config:
+    prefix = json.load(config)["prefix"]
 
 def parseInput(text: str):
     defaultArgs = args.default()
 
-    for arg in text.split(' '):
+    inputList = text.split(' ')
+    if inputList[0].startswith(prefix):
+        inputList.pop(0)
+
+    for arg in inputList:
         key, value = arg.split('=')
 
         if key in defaultArgs:
