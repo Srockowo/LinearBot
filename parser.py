@@ -8,8 +8,7 @@ def parseInput(text: str):
     defaultArgs = args.default()
 
     inputList = text.split(' ')
-    if inputList[0].startswith(prefix):
-        inputList.pop(0)
+    if inputList[0].startswith(prefix): inputList.pop(0)
 
     for arg in inputList:
         key, value = arg.split('=')

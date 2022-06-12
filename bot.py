@@ -62,25 +62,28 @@ async def help(ctx: Context):
 
 async def handleInput(replyTo: Context | discord.Message, input: str):
     if input == "":
-        await replyTo.reply("At least 1 argument is required.")
+        await errorMsg(replyTo, "At least 1 argument is required.")
         return
     
     try: inputArgs = parser.parseInput(input)
     except:
-        await replyTo.reply(f"Invalid arguments. Use `{prefix}help` for more information")
+        await errorMsg(replyTo, f"Invalid arguments. Use `{prefix}help` for more information")
         return
 
     airtime = inputArgs["airtime"]
     if airtime < 0 or airtime > 255:
-        await replyTo.reply("`airtime` has to be a value between `0` and `255`.")
+        await errorMsg(replyTo, "`airtime` has to be a value between `0` and `255`.")
         return
 
     results = calculation.possibilities(inputArgs)
 
     if (len(results) < 1):
-        await replyTo.reply("No results found.")
+        await errorMsg(replyTo, "No results found.")
         return
 
     return calculation.toString(results, inputArgs)
+
+async def errorMsg(to: Context | discord.Message, msg: str):
+    await to.reply(content=msg, delete_after=5)
 
 bot.run(token)
